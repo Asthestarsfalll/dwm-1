@@ -1302,7 +1302,7 @@ clickstatusbar(const Arg *arg)
     }
 
     memset(text, '\0', sizeof(text));
-    sprintf(text, "%s %s %s &", statusbarscript, signal, button);
+    sprintf(text, "sh %s %s %s &", statusbarscript, signal, button);
     system(text);
 }
 
@@ -2287,7 +2287,7 @@ run(void)
 void
 runAutostart(void) {
     char cmd [100];
-    sprintf(cmd, "%s &", autostartscript);
+    sprintf(cmd, "sh %s &", autostartscript);
     system(cmd);
 }
 
@@ -2606,8 +2606,10 @@ showtag(Client *c)
         showtag(c->snext);
         if (c->mon->mx == 0) {
             XMoveWindow(dpy, c->win, WIDTH(c) * -1.5, c->y);
+            // XMoveWindow(dpy, c->win, c->x, c->mon->my - HEIGHT(c)* 2);
         } else {
             XMoveWindow(dpy, c->win, c->mon->mx + c->mon->mw + WIDTH(c) * 1.5, c->y);
+            // XMoveWindow(dpy, c->win, c->x, c->mon->my);
         }
     }
 }
