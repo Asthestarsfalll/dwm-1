@@ -17,6 +17,15 @@ dwm 是一个非常快速, 小巧并使用动态管理窗口的窗口管理器
 - mod + tab, 在窗口间切换 有浮动窗口时仅在浮动窗口切换
 - mod + [tag], 切换tag到指定目录时 可指定一个cmd，若目标tag无窗口 则执行该tag
 
+## 更新
+
+更新statusbar:
+![](./assets/screenshot.png)
+1. 增加音乐播放，并且可以显示进度，左键暂停/播放，右键打开播放器（musicfox），中间打开cava，滚轮上/下滑下/上一首；
+2. 增加音量条，点击静音；
+3. 增加亮度调节功能，一次性调节所有屏幕，左中右键预设亮度，上下滚轮微调；
+4. TODO, 增加cava。
+
 ## 安装
 
 ```plaintext
@@ -41,27 +50,6 @@ tty中执行 `startx` 启动
 
 ```plaintext
   [ $(tty) = "/dev/tty1" ] && cd ~ && startx
-```
-
-## !!!关于fork配置!!!
-
-```plaintext
-  本仓库默认集成了 `DEF/` 目录，该目录为作者本人使用的配置
-  DEF: 推荐配置 亦是 作者本人使用的配置
-
-  首次运行 可自行 `cp -r DEF/* .`
-
-  后续请用户自行维护 ./config.h ./statusbar ./autostart.sh 文件
-  且此部分文件已被 gitignore
-
-  即用户可始终保持yaocccc/dwm仓库代码最新版而不受影响
-
-  较推荐的fork方式
-
-  1. fork本代码仓库
-  2. 自行维护fork后的仓库相关的配置文件: ./config.h ./statusbar ./autostart.sh
-  3. 注释掉fork后仓库中 .gitignore 的前三行
-  4. 定期在github页面sync yaocccc/dwm 仓库保持最新
 ```
 
 ### Nix Flake
@@ -130,8 +118,6 @@ tty中执行 `startx` 启动
 
 dwm启动时会去调用 $DWM/autostart.sh 脚本
 
-可参考 [autostart脚本](https://github.com/yaocccc/dwm/blob/master/DEF/autostart.sh)
-
 ## Q & A
 
 1. 如何启动dwm？
@@ -186,28 +172,3 @@ yay -S wqy-microhei
 7. 自启动脚本没启动
 
 请检查DWM变量是否正确设置，如果实在不行了，可以直接强制改config.h 里的 autostartscript 和 statusbarscript 变量
-
-## 贡献者 THX 🌻
-
-- [yaocccc](https://github.com/yaocccc)
-  - [MASTER](#TOP)
-- [p3psi-boo](https://github.com/p3psi-boo)
-  - [PR#4 添加 Nix Flake 支持](https://github.com/yaocccc/dwm/pull/4)
-- [gxt-kt](https://github.com/gxt-kt)
-  - [PR#7 修复hide/show窗口栈索引带来的无法恢复窗口的bug](https://github.com/yaocccc/dwm/pull/7)
-  - [PR#19 二维选中、交换窗口](https://github.com/yaocccc/dwm/pull/19)
-- [Ruixi-rebirth](https://github.com/Ruixi-rebirth)
-  - [PR#12 优化flake](https://github.com/yaocccc/dwm/pull/12)
-  - [PR#16 优化flake](https://github.com/yaocccc/dwm/pull/16)
-- [Int-0X7FFFFFFF](https://github.com/Int-0X7FFFFFFF)
-  - [PR#20 修复了音量在中文环境下一直显示静音的错误](https://github.com/yaocccc/dwm/pull/20)
-- [zainmiku](https://github.com/zainmiku)
-  - [PR#25 音乐标题包含"'时的处理](https://github.com/yaocccc/dwm/pull/25) 
-
-## ENJOY IT 😃
-
-## Support: buy me a coffee
-
-<a href="https://www.buymeacoffee.com/yaocccc" target="_blank">
-  <img src="https://github.com/yaocccc/yaocccc/raw/master/qr.png">
-</a>

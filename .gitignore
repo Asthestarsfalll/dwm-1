@@ -1,7 +1,3 @@
-# config.h
-autostart.sh
-statusbar/
-
 result/
 dwm
 *.o
@@ -9,4 +5,3 @@ dwm
 compile_commands.json
 .cache
 statusbar/temp
-DEF/statusbar/temp

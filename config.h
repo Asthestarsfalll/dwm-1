@@ -1,6 +1,6 @@
 #include <X11/XF86keysym.h>
 
-static int showsystray                   = 1;         /* 是否显示托盘栏 */
+static int showsystray                   = 0;         /* 是否显示托盘栏 */
 static const int newclientathead         = 0;         /* 定义新窗口在栈顶还是栈底 */
 static const unsigned int borderpx       = 2;         /* 窗口边框大小 */
 static const unsigned int systraypinning = 1;         /* 托盘跟随的显示器 0代表不指定显示器 */
@@ -10,7 +10,7 @@ static int gappi                         = 12;        /* 窗口与窗口 缝隙�
 static int gappo                         = 12;        /* 窗口与边缘 缝隙大小 */
 static const int _gappo                  = 12;        /* 窗口与窗口 缝隙大小 不可变 用于恢复时的默认值 */
 static const int _gappi                  = 12;        /* 窗口与边缘 缝隙大小 不可变 用于恢复时的默认值 */
-static const int vertpad                 = 20;         /* vertical padding of bar */
+static const int vertpad                 = 5;         /* vertical padding of bar */
 static const int sidepad                 = 5;         /* horizontal padding of bar */
 static const int overviewgappi           = 24;        /* overview时 窗口与边缘 缝隙大小 */
 static const int overviewgappo           = 60;        /* overview时 窗口与窗口 缝隙大小 */
@@ -190,6 +190,7 @@ static Key keys[] = {
 
     /* spawn + SHCMD 执行对应命令(已下部分建议完全自己重新定义) */
     { MODKEY,              XK_space,  togglescratch, SHCMD("st -t spad -c float") },                      /* super s          | 打开scratch终端        */
+    { MODKEY|ControlMask,  XK_space,  spawn, SHCMD("st -t spad -c float") },                      /* super s          | 打开scratch终端        */
     { MODKEY|ShiftMask,    XK_Return, spawn, SHCMD("konsole") },                                                     /* super enter      | 打开st终端             */
     { ControlMask,         XK_space,  spawn, SHCMD("rofi -show run") },                                         /* super d          | rofi: 执行run          */
     { MODKEY,              XK_p,      spawn, SHCMD("rofi -show menu -modi 'menu:~/scripts/rofi.sh'") },                                       /* super p          | rofi: 执行自定义脚本   */
