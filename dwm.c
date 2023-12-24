@@ -379,6 +379,7 @@ static void (*handler[LASTEvent]) (XEvent *) = {
 };
 static Atom wmatom[WMLast], netatom[NetLast], xatom[XLast];
 static int running = 1;
+static int restart = 0;
 static Cur *cursor[CurLast];
 static Clr **scheme;
 static Display *dpy;
@@ -2112,10 +2113,120 @@ propertynotify(XEvent *e)
     }
 }
 
+// restoreafterrestart
+void
+saveSession(void)
+{
+	FILE *fw = fopen(SESSION_FILE, "w");
+	for (Client *c = selmon->clients; c != NULL; c = c->next) { // get all the clients with their tags and write them to the file
+		fprintf(fw, "%lu %u\n", c->win, c->tags);
+	}
+	fclose(fw);
+}
+
+void
+restoreSession(void)
+{
+	// restore session
+	FILE *fr = fopen(SESSION_FILE, "r");
+	if (!fr)
+		return;
+
+	char *str = (char*)malloc(23 * sizeof(char)); // allocate enough space for excepted input from text file
+	while (fscanf(fr, "%[^\n] ", str) != EOF) { // read file till the end
+		long unsigned int winId;
+		unsigned int tagsForWin;
+		int check = sscanf(str, "%lu %u", &winId, &tagsForWin); // get data
+		if (check != 2) // break loop if data wasn't read correctly
+			break;
+		
+		for (Client *c = selmon->clients; c ; c = c->next) { // add tags to every window by winId
+			if (c->win == winId) {
+				c->tags = tagsForWin;
+				break;
+			}
+		}
+    }
+
+	for (Client *c = selmon->clients; c ; c = c->next) { // refocus on windows
+		focus(c);
+		restack(c->mon);
+	}
+
+	for (Monitor *m = selmon; m; m = m->next) // rearrange all monitors
+		arrange(m);
+
+	free(str);
+	fclose(fr);
+	
+	// delete a file
+	remove(SESSION_FILE);
+}
+
+void saveTagSession() {
+	FILE *fw = fopen(SESSION_TAG_FILE, "w");
+  fprintf(fw, "%d\n", selmon->sel->tags);
+	fclose(fw);
+}
+void restoreTagSession() {
+	FILE *fr = fopen(SESSION_TAG_FILE, "r");
+	if (!fr)
+		return;
+
+	char str[10] = {0};
+	if (fscanf(fr, "%[^\n] ", str) != EOF) { // read file
+    int tag=0;
+		int check = sscanf(str, "%d",&tag); // get data
+    // view(&(Arg) { .ui = tag }); //切换到对应tag
+    Arg arg_;
+    arg_.ui=tag;
+    view(&arg_);
+  }
+
+  for (Monitor *m = selmon; m; m = m->next) // rearrange all monitors
+    arrange(m);
+
+	fclose(fr);
+	
+	// delete a file
+	remove(SESSION_TAG_FILE);
+}
+
 void
 quit(const Arg *arg)
 {
-    running = 0;
+	if(arg->i) {
+        restart = 1;
+        running=0;
+    }
+
+  // restoreafterrestart
+	if (restart == 1) {
+		saveSession();
+    saveTagSession();
+    // gDebug("saveSession");
+  }
+    // running = 0; // doublepressquitPatch
+	{// doublepressquitPatch
+	FILE *fd = NULL;
+	struct stat filestat;
+
+	if ((fd = fopen(lockfile, "r")) && stat(lockfile, &filestat) == 0) {
+		fclose(fd);
+
+		if (filestat.st_ctime <= time(NULL)-2)
+			remove(lockfile);
+	}
+
+	if ((fd = fopen(lockfile, "r")) != NULL) {
+		fclose(fd);
+		remove(lockfile);
+		running = 0;
+	} else {
+		if ((fd = fopen(lockfile, "a")) != NULL)
+			fclose(fd);
+	}
+	}
 }
 
 Monitor *
@@ -3673,8 +3784,28 @@ main(int argc, char *argv[])
         die("pledge");
 #endif /* __OpenBSD__ */
     scan();
+    FILE *file_;
+    if ((file_ = fopen(avoid_repeat_auto_start, "r"))) {
+      fclose(file_);  // exist
+      // gDebug( " file exist");
+    } else {
+      // gDebug( " file don't exist");
+      FILE *file_;
+      if ((file_ = fopen(avoid_repeat_auto_start, "w"))) {
+        fclose(file_);  // create file
+      }
+      // gDebug( "create file");
+      runAutostart();
+    }
+	restoreSession();
+    restoreTagSession();
     runAutostart();
     run();
+    if(restart) execvp(argv[0], argv); // 重启不删除文件
+    else { //退出就删除文件
+      remove(avoid_repeat_auto_start); //delete file when exit
+      // gDebug("remove file debug point 2");
+    }
     cleanup();
     XCloseDisplay(dpy);
     return EXIT_SUCCESS;

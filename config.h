@@ -35,6 +35,7 @@ static const char *colors[][3]           = {          /* 颜色设置 ColFg, Col
 
     [SchemeNorm] = { "#000080", "#31748f", "#444444" },
     [SchemeSel] = { "#7B102B", "#387056", "#9E5176" },
+    // [SchemeSel] = { "#7B1", "#387056", "#9E5176" },
     [SchemeSelGlobal] = { "#ffffff", "#387056", "#FFC0CB" },
     [SchemeHid] = { "#dddddd", NULL, NULL },
     [SchemeSystray] = { NULL, "#7799AA", NULL },
@@ -67,6 +68,7 @@ static const unsigned int alphas[][3]    = {          /* 透明度设置 ColFg, 
 static const char *autostartscript = "~/scripts/dwm_start.sh";
 static const char *statusbarscript = "~/scripts/statusbar/statusbar.sh";
 
+
 /* 自定义 scratchpad instance */
 static const char scratchpadname[] = "spad";
 
@@ -74,6 +76,18 @@ static const char scratchpadname[] = "spad";
 /* 自定义特定实例的显示状态 */
 //            ﮸  ﭮ 切
 static const char *tags[] = { "", "", "", "",  "ﬄ", "", "󰤚", "﬐"};
+
+
+/* Lockfile */ // doublepressquitPatch
+static char lockfile[] = "/tmp/dwm.lock"; 
+//-----------------------------------------------------------------------------
+/* Super-Ctrl-Shift-Esc 热重启dwm后不会重复执行autostart脚本 */
+static const char* avoid_repeat_auto_start = "/tmp/dwm_avoid_repeat_auto_start.lock"; // doublepressquitPatch
+                                                                                      //
+//-----------------------------------------------------------------------------
+// restore after restart
+#define SESSION_FILE "/tmp/dwm-session"
+#define SESSION_TAG_FILE "/tmp/dwm-tag-session"
 
 /* 自定义窗口显示规则 */
 /* class instance title 主要用于定位窗口适合哪个规则 */
@@ -180,6 +194,7 @@ static Key keys[] = {
     { MODKEY|ShiftMask,    XK_c,            killclient,       {0} },                     /* super q            |  关闭窗口 */
     { MODKEY|ControlMask,  XK_c,            forcekillclient,  {0} },                     /* super ctrl q       |  强制关闭窗口(处理某些情况下无法销毁的窗口) */
     { MODKEY|ControlMask,  XK_q,            quit,             {0} },                     /* super ctrl f12     |  退出dwm */
+    { MODKEY|ControlMask|ShiftMask,  XK_q,            quit,   {1} },                     /* super ctrl f12     |  退出dwm */
 
 	{ MODKEY|ShiftMask,    XK_e,            selectlayout,     {.v = &layouts[1]} },      /* super shift space  |  切换到网格布局 */
 	{ MODKEY,              XK_o,            showonlyorall,    {0} },                     /* super o            |  切换 只显示一个窗口 / 全部显示 */
