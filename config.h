@@ -23,14 +23,24 @@ static const unsigned int baralpha       = 0xc0;      /* 状态栏透明度 */
 static const unsigned int borderalpha    = 0xdd;      /* 边框透明度 */
 static const char *fonts[]               = { "JetBrainsMono Nerd Font:style=medium:size=13", "monospace:size=13" };
 static const char *colors[][3]           = {          /* 颜色设置 ColFg, ColBg, ColBorder */ 
-    [SchemeNorm] = { "#bbbbbb", "#333333", "#444444" },
-    [SchemeSel] = { "#ffffff", "#37474F", "#42A5F5" },
-    [SchemeSelGlobal] = { "#ffffff", "#37474F", "#FFC0CB" },
+    // [SchemeNorm] = { "#bbbbbb", "#333333", "#444444" },
+    // [SchemeSel] = { "#ffffff", "#37474F", "#42A5F5" },
+    // [SchemeSelGlobal] = { "#ffffff", "#37474F", "#FFC0CB" },
+    // [SchemeHid] = { "#dddddd", NULL, NULL },
+    // [SchemeSystray] = { NULL, "#7799AA", NULL },
+    // [SchemeUnderline] = { "#7799AA", NULL, NULL },
+    // [SchemeNormTag] = { "#bbbbbb", "#333333", NULL },
+    // [SchemeSelTag] = { "#eeeeee", "#333333", NULL },
+    // [SchemeBarEmpty] = { NULL, "#111111", NULL },
+
+    [SchemeNorm] = { "#000080", "#31748f", "#444444" },
+    [SchemeSel] = { "#7B102B", "#387056", "#9E5176" },
+    [SchemeSelGlobal] = { "#ffffff", "#387056", "#FFC0CB" },
     [SchemeHid] = { "#dddddd", NULL, NULL },
     [SchemeSystray] = { NULL, "#7799AA", NULL },
-    [SchemeUnderline] = { "#7799AA", NULL, NULL }, 
-    [SchemeNormTag] = { "#bbbbbb", "#333333", NULL },
-    [SchemeSelTag] = { "#eeeeee", "#333333", NULL },
+    [SchemeUnderline] = { "#eb6f92", NULL, NULL },
+    [SchemeNormTag] = { "#000080", "#387056", NULL },
+    [SchemeSelTag] = { "#7B102B", "#387056", "#7B102B" },
     [SchemeBarEmpty] = { NULL, "#111111", NULL },
 
     // [SchemeNorm] = { NULL, NULL, "#26233a" },
@@ -63,7 +73,7 @@ static const char scratchpadname[] = "spad";
 /* 自定义tag名称 */
 /* 自定义特定实例的显示状态 */
 //            ﮸  ﭮ 切
-static const char *tags[] = { "", "", "", "",  "ﬄ", "", "󰤚" };
+static const char *tags[] = { "", "", "", "",  "ﬄ", "", "󰤚", "﬐"};
 
 /* 自定义窗口显示规则 */
 /* class instance title 主要用于定位窗口适合哪个规则 */
@@ -80,18 +90,24 @@ static const Rule rules[] = {
     { NULL,                  NULL,                "图片查看",        0,            1,          0,          0,        -1,      0}, // 微信图片查看器      浮动
 
     /** 普通优先度 */
-    {"obs",                  NULL,                 NULL,             1 << 4,       0,          0,          0,        -1,      0}, // obs        tag -> 󰕧
-    {"chrome",               NULL,                 NULL,             1 << 3,       0,          0,          0,        -1,      0}, // chrome     tag -> 
-    {"Chromium",             NULL,                 NULL,             1 << 3,       0,          0,          0,        -1,      0}, // Chromium   tag -> 
-    {"music",                NULL,                 NULL,             1 << 6,       1,          0,          1,        -1,      0}, // music      tag ->  浮动、无边框
-    { NULL,                 "tencent-qq",                  NULL,             1 << 5,       0,          0,          1,        -1,      0}, // qq         tag -> ﬄ 无边框
+    {"QQ",                   NULL,                 NULL,             0     ,       1,          1,          1,        -1,      0}, // Chromium   tag -> 
+    {"obsidian",             NULL,                 NULL,             1 << 5,       0,          0,          1,        -1,      0}, // Chromium   tag -> 
+    {"Sigma file manager",   NULL,                 NULL,             0,            1,          0,          1,        -1,      0}, // Chromium   tag -> 
+    {"obs",                  NULL,                 NULL,             1 << 6,       0,          0,          0,        -1,      0}, // obs        tag -> 󰕧
+    {"google-chrome",        NULL,                 NULL,             1 << 3,       0,          0,          0,        -1,      0}, // chrome     tag -> 
+    {"chromium",             NULL,                 NULL,             1 << 3,       0,          0,          0,        -1,      0}, // Chromium   tag -> 
+    {"neovide",              NULL,                 NULL,             1 << 2,       0,          0,          1,        -1,      0}, // music      tag ->  浮动、无边框
+    // { NULL,                 "linuxqq",             NULL,             1 << 4,       1,          0,          1,        -1,      0}, // qq         tag -> ﬄ 无边框
+    {"weixin",              "weixin",              NULL,             1 << 7,       1,          0,          1,        -1,      0}, // qq         tag -> ﬄ 无边框
     // { NULL,                 "wechat.exe",          NULL,             1 << 7,       0,          0,          1,        -1,      0}, // wechat     tag -> ﬐ 无边框
     // { NULL,                 "wxwork.exe",          NULL,             1 << 8,       0,          0,          1,        -1,      0}, // workwechat tag ->  无边框
     // {"Vncviewer",            NULL,                 NULL,             0,            1,          0,          1,        -1,      2}, // Vncviewer           浮动、无边框 屏幕顶部
+    {"telegram",             NULL,                 NULL,             1 << 7,       1,          0,          1,        -1,      0}, // !!!腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
     {"flameshot",            NULL,                 NULL,             0,            1,          0,          0,        -1,      0}, // 火焰截图            浮动
-    {"scratchpad",          "scratchpad",         "scratchpad",      TAGMASK,      1,          1,          1,        -1,      2}, // scratchpad          浮动、全局、无边框 屏幕顶部
+    {"spad",                "spad",               "spad",            TAGMASK,      1,          1,          1,        -1,      0}, // scratchpad          浮动、全局、无边框 屏幕顶部
     {"Pcmanfm",              NULL,                 NULL,             0,            1,          0,          1,        -1,      3}, // pcmanfm             浮动、无边框 右上角
     {"wemeetapp",            NULL,                 NULL,             TAGMASK,      1,          1,          0,        -1,      0}, // !!!腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
+    {"ToDesk",               NULL,                 NULL,             0,      1,          1,          1,        -1,      0}, // !!!腾讯会议在切换tag时有诡异bug导致退出 变成global来规避该问题
 
     /** 部分特殊class的规则 */
     {"float",                NULL,                 NULL,             0,            1,          0,          0,        -1,      0}, // class = float       浮动
@@ -145,6 +161,9 @@ static Key keys[] = {
     { MODKEY,              XK_d,            hidewin,          {0} },                     /* super i            |  隐藏 窗口 */
     { MODKEY|ShiftMask,    XK_d,            restorewin,       {0} },                     /* super shift i      |  取消隐藏 窗口 */
 
+    { MODKEY,              XK_backslash,            hidewin,          {0} },                     /* super i            |  隐藏 窗口 */
+    { MODKEY|ShiftMask,    XK_backslash,            restorewin,       {0} },                     /* super shift i      |  取消隐藏 窗口 */
+
     { MODKEY,              XK_Return,       zoom,             {0} },                     /* super shift enter  |  将当前聚焦窗口置为主窗口 */
 
     { MODKEY,              XK_f,            togglefloating,   {0} },                     /* super t            |  开启/关闭 聚焦目标的float模式 */
@@ -162,7 +181,7 @@ static Key keys[] = {
     { MODKEY|ControlMask,  XK_c,            forcekillclient,  {0} },                     /* super ctrl q       |  强制关闭窗口(处理某些情况下无法销毁的窗口) */
     { MODKEY|ControlMask,  XK_q,            quit,             {0} },                     /* super ctrl f12     |  退出dwm */
 
-	{ MODKEY|ShiftMask,    XK_w,            selectlayout,     {.v = &layouts[1]} },      /* super shift space  |  切换到网格布局 */
+	{ MODKEY|ShiftMask,    XK_e,            selectlayout,     {.v = &layouts[1]} },      /* super shift space  |  切换到网格布局 */
 	{ MODKEY,              XK_o,            showonlyorall,    {0} },                     /* super o            |  切换 只显示一个窗口 / 全部显示 */
 
     { MODKEY|ControlMask,  XK_equal,        setgap,           {.i = -6} },               /* super ctrl +       |  窗口增大 */
@@ -203,11 +222,12 @@ static Key keys[] = {
     /* key tag cmd */
     TAGKEYS(XK_1, 0, 0)
     TAGKEYS(XK_2, 1, 0)
-    TAGKEYS(XK_g, 2, "neovide")
+    TAGKEYS(XK_v, 2, "neovide --multigrid")
     TAGKEYS(XK_x, 3, "google-chrome-stable")
     TAGKEYS(XK_z, 4, "linuxqq")
-    TAGKEYS(XK_4, 5, "obsidian")
+    TAGKEYS(XK_3, 5, 0)
     TAGKEYS(XK_9, 6, "obs")
+    TAGKEYS(XK_w, 7, "wechat-uos")
 };
 
 static Button buttons[] = {
@@ -232,6 +252,6 @@ static Button buttons[] = {
     { ClkStatusText,       0,               Button5,          clickstatusbar,{0} },                                   // 鼠标滚轮下  |  状态栏       |  根据状态栏的信号执行 ~/scripts/dwmstatusbar.sh $signal D
                                                                                                                       //
     /* 点击bar空白处 */
-    { ClkBarEmpty,         0,               Button1,          spawn, SHCMD("~/scripts/call_rofi.sh window") },        // 左键        |  bar空白处    |  rofi 执行 window
-    { ClkBarEmpty,         0,               Button3,          spawn, SHCMD("~/scripts/call_rofi.sh drun") },          // 右键        |  bar空白处    |  rofi 执行 drun
+    // { ClkBarEmpty,         0,               Button1,          spawn, SHCMD("~/scripts/call_rofi.sh window") },        // 左键        |  bar空白处    |  rofi 执行 window
+    // { ClkBarEmpty,         0,               Button3,          spawn, SHCMD("~/scripts/call_rofi.sh drun") },          // 右键        |  bar空白处    |  rofi 执行 drun
 };

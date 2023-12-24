@@ -1749,11 +1749,16 @@ manage(Window w, XWindowAttributes *wa)
                 && (c->x + (c->w / 2) < c->mon->wx + c->mon->ww)) ? bh : c->mon->my);
 
     if (c->isfloating) {
+        // if new client is floating, then manage it as floating
         if (c->x==0 && c->y==0) {
             c->x = selmon->wx + (selmon->ww - c->w) / 2;
             c->y = selmon->wy + (selmon->wh - c->h) / 2;
         }
         managefloating(c);
+    } else {
+        // if new client is tile, old sel is fullscreen, then close fullscreen
+        if (c->mon->sel && c->mon->sel->isfullscreen)
+            fullscreen(NULL);
     }
 
     XConfigureWindow(dpy, w, CWBorderWidth, &wc);
@@ -3455,7 +3460,7 @@ grid(Monitor *m, uint gappo, uint gappi)
     if (n == 0) return;
     if (n == 1) {
         c = nexttiled(m->clients);
-        cw = (m->ww - 2 * gappo) * 0.7;
+        cw = (m->ww - 2 * gappo) * 0.55;
         ch = (m->wh - 2 * gappo) * 0.65;
         resize(c,
                m->mx + (m->mw - cw) / 2 + gappo,

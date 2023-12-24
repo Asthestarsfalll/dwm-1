@@ -13,7 +13,7 @@ signal=$(echo "^s$this^" | sed 's/_//')
 # 中英文适配
 wifi_grep_keyword="已连接 到"
 wifi_disconnected="未连接"
-wifi_disconnected_notify="未连接到网络"
+# wifi_disconnected_notify="未连接到网络"
 # if [ "$LANG" != "zh_CN.UTF-8" ]; then
 #     wifi_grep_keyword="connected to"
 #     wifi_disconnected="disconnected"
